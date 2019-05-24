@@ -11,24 +11,30 @@ type StringNumber struct {
 }
 
 func (sn *StringNumber) Add(other StringNumber) {
-	snArr := extractNums(*sn)
-	oArr := extractNums(other)
+	snArr := extractNums(sn.value)
+	oArr := extractNums(other.value)
 
 	if len(snArr) <= len(oArr) {
 		sn.value = add(snArr, oArr)
 	} else {
 		sn.value = add(oArr, snArr)
 	}
-	fmt.Println("final", sn.value)
 }
 
 func (sn *StringNumber) Multiply(other StringNumber) {
+	snArr := extractNums(sn.value)
+	oArr := extractNums(other.value)
 
+	if len(snArr) <= len(oArr) {
+		sn.value = multiply(snArr, oArr)
+	} else {
+		sn.value = multiply(oArr, snArr)
+	}
 }
 
-func extractNums(sn StringNumber) []uint8 {
+func extractNums(str string) []uint8 {
 	extracted := make([]uint8, 0)
-	for _, char := range sn.value {
+	for _, char := range str {
 		// Treat non-numeric values as 0
 		if char < 48 || char > 57 {
 			extracted = append(extracted, 0)
@@ -46,6 +52,10 @@ func reverseInts(input *[]uint8) {
 }
 
 func add(short, long []uint8) string {
+	if len(short) == 0 && len(long) == 0 {
+		return "0"
+	}
+
 	reverseInts(&short)
 	reverseInts(&long)
 
@@ -70,15 +80,49 @@ func add(short, long []uint8) string {
 	return strings.Join(str, "")
 }
 
-func multiply() {
+func multiply(short, long []uint8) string {
+	if len(short) == 0 && len(long) == 0 {
+		return "0"
+	}
 
+	reverseInts(&short)
+	reverseInts(&long)
+
+	final := ""
+	for i := 0; i < len(short); i++ {
+
+		nextSum := make([]string, i)
+		// Fill with preceding zeros
+		for c := 0; c < i; c++ {
+			nextSum = append(nextSum, "0")
+		}
+
+		carry := uint8(0)
+		for j := 0; j < len(long); j++ {
+			mult := (short[i] * long[j]) + carry
+			if mult >= 10 {
+				carry = uint8(mult / 10)
+				nextSum = append([]string{strconv.Itoa(int(mult % 10))}, nextSum...)
+			} else {
+				carry = 0
+				nextSum = append([]string{strconv.Itoa(int(mult))}, nextSum...)
+			}
+		}
+		if carry != 0 {
+			nextSum = append([]string{strconv.Itoa(int(carry))}, nextSum...)
+		}
+		final = add(extractNums(final), extractNums(strings.Join(nextSum, "")))
+	}
+
+	return final
 }
 
+// Used for testing
 func main() {
-	a := StringNumber{value: "11"}
-	b := StringNumber{value: "10"}
+	a := StringNumber{value: "356"}
+	b := StringNumber{value: "21"}
 
 	fmt.Println(a, b)
-	a.Add(b)
+	a.Multiply(b)
 	fmt.Println(a, b)
 }
