@@ -5,4 +5,4 @@ start:
 	./string_number
 
 test:
-	echo "test"
+	go test ./...

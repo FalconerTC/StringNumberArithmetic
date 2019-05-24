@@ -35,6 +35,13 @@ func Test_Add(t *testing.T) {
 		assert.Equal(t, a.value, "0")
 	})
 
+	t.Run("one empty string", func(t *testing.T) {
+		a := StringNumber{value: ""}
+		b := StringNumber{value: "6"}
+		a.Add(b)
+		assert.Equal(t, a.value, "6")
+	})
+
 	t.Run("string with non-numbers", func(t *testing.T) {
 		a := StringNumber{value: "a9"}
 		b := StringNumber{value: "13"}
@@ -75,6 +82,13 @@ func Test_Multiply(t *testing.T) {
 	t.Run("empty strings", func(t *testing.T) {
 		a := StringNumber{value: ""}
 		b := StringNumber{value: ""}
+		a.Multiply(b)
+		assert.Equal(t, a.value, "0")
+	})
+
+	t.Run("one empty string", func(t *testing.T) {
+		a := StringNumber{value: ""}
+		b := StringNumber{value: "6"}
 		a.Multiply(b)
 		assert.Equal(t, a.value, "0")
 	})

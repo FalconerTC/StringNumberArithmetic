@@ -10,6 +10,12 @@ type StringNumber struct {
 	value string
 }
 
+// Used to add the numeric values to another StringNumber
+// Treats non-numeric values as 0s
+// Ex:
+// 		sn := StringNumber{2}
+//		sn.Add(2)
+//		sn.value === 4
 func (sn *StringNumber) Add(other StringNumber) {
 	snArr := extractNums(sn.value)
 	oArr := extractNums(other.value)
@@ -21,6 +27,12 @@ func (sn *StringNumber) Add(other StringNumber) {
 	}
 }
 
+// Used to multiply the numeric values to another StringNumber
+// Treats non-numeric values as 0s
+// Ex:
+// 		sn := StringNumber{2}
+//		sn.Multiply(3)
+//		sn.value === 6
 func (sn *StringNumber) Multiply(other StringNumber) {
 	snArr := extractNums(sn.value)
 	oArr := extractNums(other.value)
@@ -81,7 +93,7 @@ func add(short, long []uint8) string {
 }
 
 func multiply(short, long []uint8) string {
-	if len(short) == 0 && len(long) == 0 {
+	if len(short) == 0 || len(long) == 0 {
 		return "0"
 	}
 
